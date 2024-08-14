@@ -8,6 +8,9 @@ This is a text-based RPG game inspired by classic BBS door games like Tradewars 
 - Overview map for navigation
 - Player movement commands
 - Keyboard and Xbox controller support
+- Inventory system
+- Enemy encounters
+- Quest system
 
 ## Getting Started
 1. Clone the repository.
@@ -16,3 +19,7 @@ This is a text-based RPG game inspired by classic BBS door games like Tradewars 
 ## Controls
 - Use `up`, `down`, `left`, `right` to move.
 - Type `quit` to exit the game.
+- Type `inventory` to view your items.
+- Type `attack` to attack the first enemy.
+- Type `quests` to view available quests.
+- Type `complete <quest title>` to complete a quest.
