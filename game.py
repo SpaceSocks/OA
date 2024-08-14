@@ -1,10 +1,15 @@
 import sys
 import os
+import msvcrt
+import pygame
 
 class Game:
     def __init__(self):
         self.map = self.create_map()
-        self.player_position = (0, 0)
+        self.player_position = (1, 1)
+        pygame.init()
+        self.controller = pygame.joystick.Joystick(0)
+        self.controller.init()
 
     def create_map(self):
         return [
@@ -39,11 +44,24 @@ class Game:
     def run(self):
         while True:
             self.display_map()
-            command = input('Enter command (up, down, left, right, quit): ').strip().lower()
+            command = self.get_input()
             if command in ['up', 'down', 'left', 'right']:
                 self.move_player(command)
             elif command == 'quit':
                 break
+
+    def get_input(self):
+        for event in pygame.event.get():
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 0:  # A button
+                    return 'up'
+                elif event.button == 1:  # B button
+                    return 'down'
+                elif event.button == 2:  # X button
+                    return 'left'
+                elif event.button == 3:  # Y button
+                    return 'right'
+        return input('Enter command (up, down, left, right, quit): ').strip().lower()
 
 if __name__ == '__main__':
     game = Game()
