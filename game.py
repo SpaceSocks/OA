@@ -11,6 +11,7 @@ class Game:
         self.player_position = (1, 1)
         self.inventory = []
         self.enemies = [Enemy('Goblin', 30, 5)]
+        self.quests = [Quest('Find the Lost Sword', 'Retrieve the sword from the goblin cave.', '100 gold')]
         pygame.init()
         self.controller = pygame.joystick.Joystick(0)
         self.controller.init()
@@ -64,6 +65,11 @@ class Game:
                 self.show_inventory()
             elif command == 'attack':
                 self.attack_enemy()
+            elif command == 'quests':
+                self.show_quests()
+            elif command.startswith('complete '):
+                quest_title = command.split(' ', 1)[1]
+                self.complete_quest(quest_title)
 
     def show_inventory(self):
         if not self.inventory:
@@ -77,12 +83,29 @@ class Game:
         if self.enemies:
             enemy = self.enemies[0]  # Attack the first enemy
             print(f'Attacking {enemy.name}!')
-            enemy.health -= 10  # Example damage
+            enemy.take_damage(10)  # Example damage
             if enemy.health <= 0:
                 print(f'{enemy.name} defeated!')
                 self.enemies.remove(enemy)
         else:
             print('No enemies to attack.')
+
+    def show_quests(self):
+        if not self.quests:
+            print('No quests available.')
+        else:
+            print('Available Quests:')
+            for quest in self.quests:
+                status = 'Completed' if quest.completed else 'In Progress'
+                print(f'- {quest.title}: {status}')
+
+    def complete_quest(self, title):
+        for quest in self.quests:
+            if quest.title.lower() == title.lower() and not quest.completed:
+                reward = quest.complete()
+                print(f'Quest completed! You received: {reward}')
+                return
+        print('Quest not found or already completed.')
 
     def get_input(self):
         for event in pygame.event.get():
@@ -95,7 +118,7 @@ class Game:
                     return 'left'
                 elif event.button == 3:  # Y button
                     return 'right'
-        return input('Enter command (up, down, left, right, quit, inventory, attack): ').strip().lower()
+        return input('Enter command (up, down, left, right, quit, inventory, attack, quests, complete <quest title>): ').strip().lower()
 
 if __name__ == '__main__':
     game = Game()
