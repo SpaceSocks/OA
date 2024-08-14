@@ -3,11 +3,14 @@ import os
 import msvcrt
 import pygame
 from ansi_graphics import ANSI
+from game_mechanics import Item, Enemy, Quest
 
 class Game:
     def __init__(self):
         self.map = self.create_map()
         self.player_position = (1, 1)
+        self.inventory = []
+        self.enemies = [Enemy('Goblin', 30, 5)]
         pygame.init()
         self.controller = pygame.joystick.Joystick(0)
         self.controller.init()
@@ -57,6 +60,29 @@ class Game:
                 self.move_player(command)
             elif command == 'quit':
                 break
+            elif command == 'inventory':
+                self.show_inventory()
+            elif command == 'attack':
+                self.attack_enemy()
+
+    def show_inventory(self):
+        if not self.inventory:
+            print('Inventory is empty.')
+        else:
+            print('Inventory:')
+            for item in self.inventory:
+                print(f'- {item.name}: {item.description}')
+
+    def attack_enemy(self):
+        if self.enemies:
+            enemy = self.enemies[0]  # Attack the first enemy
+            print(f'Attacking {enemy.name}!')
+            enemy.health -= 10  # Example damage
+            if enemy.health <= 0:
+                print(f'{enemy.name} defeated!')
+                self.enemies.remove(enemy)
+        else:
+            print('No enemies to attack.')
 
     def get_input(self):
         for event in pygame.event.get():
@@ -69,7 +95,7 @@ class Game:
                     return 'left'
                 elif event.button == 3:  # Y button
                     return 'right'
-        return input('Enter command (up, down, left, right, quit): ').strip().lower()
+        return input('Enter command (up, down, left, right, quit, inventory, attack): ').strip().lower()
 
 if __name__ == '__main__':
     game = Game()
