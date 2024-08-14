@@ -2,6 +2,7 @@ import sys
 import os
 import msvcrt
 import pygame
+from ansi_graphics import ANSI
 
 class Game:
     def __init__(self):
@@ -20,9 +21,16 @@ class Game:
         ]
 
     def display_map(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
+        ANSI.clear_screen()
         for row in self.map:
-            print(' '.join(row))
+            for cell in row:
+                if cell == 'P':
+                    ANSI.set_color(32, 40)  # Green text on black background
+                else:
+                    ANSI.set_color(37, 40)  # White text on black background
+                print(cell, end=' ')
+            ANSI.reset()
+            print()  # New line after each row
 
     def move_player(self, direction):
         x, y = self.player_position
